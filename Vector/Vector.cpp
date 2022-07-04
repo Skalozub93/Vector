@@ -1,29 +1,27 @@
-#include <iostream>
-#include <algorithm>
-using namespace std;
+#include "Header1.h"
+#define LIMIT_CAPACITY 10
 
-class Vector
-{
-	int* arr;
-	int size;
-	int capacity;
-public:
-	Vector()
+	Vector::Vector(unsigned int capacity)
 	{
-		arr = new int[50];
-		capacity = 50;
-		size = 0;
-	}
-	Vector(Vector& value) : size(value.size), capacity(value.capacity)
-	{
-		arr = new int[capacity];
-		for (int i = 0; i < size; i++)
+		if (capacity < 10)
 		{
-			arr[i] = value.arr[i];
+			capacity = 10;
+		}
+		this->capacity = capacity;
+		arr = new int[capacity];
+	}
+
+
+	Vector::~Vector()
+	{
+		if (arr != nullptr)
+		{
+			delete[] arr;
+			arr = nullptr;
 		}
 	}
 
-	void RemoveByIndex(int k)
+	void Vector::RemoveByIndex(int k)
 	{
 		for (int i = k; i < size; i++)
 		{
@@ -31,7 +29,7 @@ public:
 		}
 		size--;
 	}
-	void RemoveByValue(int N)
+	void Vector::RemoveByValue(int N)
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -41,7 +39,7 @@ public:
 			}
 		}
 	}
-	void PopFront()
+	void Vector::PopFront()
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -49,11 +47,12 @@ public:
 		}
 		size--;
 	}
-	void PopBack()
+	void Vector::PopBack()
 	{
+
 		size--;
 	}
-	void TrimToSize()
+	void Vector::TrimToSize()
 	{
 		int* temp = new int[size];
 		for (int i = 0; i < size; i++)
@@ -66,7 +65,7 @@ public:
 		capacity = size;
 		delete[] temp;
 	}
-	int IndexOf(int value)
+	int Vector::IndexOf(int value)
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -74,7 +73,7 @@ public:
 			else - 1;
 		}
 	}
-	int LastIndexOf(int value)
+	int Vector::LastIndexOf(int value)
 	{
 		for (int i = size; i >= 0; i--)
 		{
@@ -85,7 +84,7 @@ public:
 			}
 		}
 	}
-	void Reverse()
+	void Vector::Reverse()
 	{
 		int temp;
 		for (int i = 0; i < size / 2; i++)
@@ -95,7 +94,7 @@ public:
 			arr[size - 1 - i] = temp;
 		}
 	}
-	void SortAsc()
+	void Vector::SortAsc()
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -108,7 +107,7 @@ public:
 			}
 		}
 	}
-	void SortDesc()
+	void Vector::SortDesc()
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -121,14 +120,14 @@ public:
 			}
 		}
 	}
-	void Shuffle()
+	void Vector::Shuffle()
 	{
 		for (int i = 0; i < size; i++)
 		{
 			swap(arr[i], arr[rand() % size]);
 		}
 	}
-	void RandomFill(int N)
+	void Vector::RandomFill(int N)
 	{
 		if (N <= capacity)
 		{
@@ -143,26 +142,89 @@ public:
 			throw "elements more than size";
 		}
 	}
-	void Equals()
+	void Vector::Equals()
 	{
 
 	}
-	int GetSize() const
+	int Vector::GetSize() const
 	{
 		return size;
 	}
-	int GetCapacity() const
+	int Vector::GetCapacity() const
 	{
 		return capacity;
 	}
-	void Print()
+	void Vector::Print()
 	{
 		for (int i = 0; i < size; i++)
 		{
 			cout << arr[i] << " ";
 		}
 	}
-};
+
+	Vector& Vector::operator = (const Vector &other)
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+		arr = other.arr;
+		size = other.size;
+
+		return *this;
+	}
+
+	int Vector::operator[](int index)
+	{
+		if (index < 0 || index >= size)
+		{
+			return arr[0];
+		}
+		return arr[index];
+	}
+
+	bool Vector::operator ==(const Vector& other)
+	{
+		return this->arr == other.arr;
+	}
+
+	istream& operator>>(istream& cin, Vector& other)
+	{
+		delete[] other.arr;
+		cout << "Enter size: ";
+		cin >> other.size;
+		cout << "Enter capacity: ";
+		cin >> other.capacity;
+
+		if (other.capacity > DEFAULT_CAPACITY)
+		{
+			other.capacity = 10;
+		}
+		other.arr = new int[other.capacity];
+		for (int i = 0; i < other.size; i++)
+		{
+			cout << "Enter elements: ";
+			cin >> other.arr[i];
+			cout << "\n";
+		}
+		return cin;
+	}
+
+	ostream& operator<<(ostream& os, const Vector& original)
+	{
+		if (original.size == 0)
+		{
+			os << "Vector is empty";
+		}
+		for (int i = 0; i < original.size; i++)
+		{
+			os << original.arr[i] << " ";
+		}
+		os << "\n";
+		os << "Size is - " << original.size;
+		os << "Capacity - " << original.capacity;
+		return os;
+	}
 
 int main()
 {
@@ -172,5 +234,5 @@ int main()
 	//a.SortDesc();
 	//a.Shuffle();
 	a.Print();
-
+	
 }
